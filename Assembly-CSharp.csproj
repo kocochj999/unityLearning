@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Davis.cs" />
     <Compile Include="Assets\Materials\Sky1\Demo\Scripts\Player\FPSWalkerEnhanced.cs" />
     <Compile Include="Assets\Materials\Sky1\Demo\Scripts\Player\SmoothMouseLook.cs" />
     <Compile Include="Assets\Materials\Sky1\Demo\Scripts\Skybox\SkyboxChanger.cs" />
