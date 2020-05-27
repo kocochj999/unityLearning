@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Davis : MonoBehaviour
+public class Davis : Enemy
 {
     [SerializeField] private float leftPoint;
     [SerializeField] private float rightPoint;
@@ -11,17 +11,16 @@ public class Davis : MonoBehaviour
     private bool facingRight = true;
 
     private Rigidbody2D rb;
-    private Animator anim;
 
 
 
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-    }
+    }   
 
     // Update is called once per frame
     void Update()
@@ -42,8 +41,6 @@ public class Davis : MonoBehaviour
     {
         if (facingRight)
         {
-            
-
             if (transform.position.x < rightPoint)
             {
                 if (transform.localScale.x != 1)
@@ -51,9 +48,7 @@ public class Davis : MonoBehaviour
                     transform.localScale = new Vector3(1, 1);
                 }
                 anim.SetBool("isWalking", true);
-                //Debug.Log(anim.GetBool("isWalking"));
                 rb.velocity = new Vector2(3f, rb.velocity.y);
-                
             }
             else
             {
@@ -62,9 +57,6 @@ public class Davis : MonoBehaviour
         }
         else
         {
-            
-            
-            
             if (transform.position.x > leftPoint)
             {
                 if (transform.localScale.x != -1)
@@ -74,7 +66,6 @@ public class Davis : MonoBehaviour
                 anim.SetBool("isWalking", true);
                 //Debug.Log(anim.GetBool("isWalking"));
                 rb.velocity = new Vector2(-3f, rb.velocity.y);
-                
             }
             else
             {
@@ -82,12 +73,5 @@ public class Davis : MonoBehaviour
             }
         }
     }
-    public void JumpedOn()
-    {
-        anim.SetTrigger("Dead");
-    }
-    private void Dead()
-    {
-        Destroy(this.gameObject);
-    }
+    
 }

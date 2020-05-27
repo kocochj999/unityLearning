@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     private Collider2D coll;
     private bool isRunning = false;
     private bool isWalking = false;
+    private int maxHealth = 100;
+    private int currentHealth;
 
     // State varibles a.k.a Finite State Machine
     private enum State { indle, walking, running, jumping, falling, hurt }
@@ -33,10 +35,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int coin = 0;
     [SerializeField] private Text coinQuantity;
     [SerializeField] private float hurtForce = 4f;
+    [SerializeField] private Text healthAmount;
 
     // Start is called before the first frame update
     void Start()
     {
+        currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         coll = GetComponent<Collider2D>();
@@ -46,11 +50,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-
         //Debug.Log(buttonCount);
-
         
         if (state != State.hurt)
         {
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         }
         StateSwitch();
         anim.SetInteger("state", (int)state); // Set state for enum 
-
+        
 
     }
 
@@ -70,30 +70,35 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject);
             coin += 1;
             coinQuantity.text = coin.ToString();
-
+        }
+        if(collision.tag =="Health")
+        {
+            if(currentHealth < maxHealth)
+            {
+                Destroy(collision.gameObject);
+                ChangeHealth(25);
+            }
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            Davis davis = collision.gameObject.GetComponent<Davis>(); 
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>(); 
             isRunning = false;
             isWalking = false;
             if (state == State.falling)
             {
-                davis.JumpedOn();
+                enemy.JumpedOn();
                 Jumping();
             }
             else
             {
-
                 //  be hurt until indle
-                // 
-
+                ChangeHealth(-25);
                 state = State.hurt;
                 
-               
+
                 if (collision.gameObject.transform.position.x > gameObject.transform.position.x)
                 {
                     rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
@@ -102,9 +107,6 @@ public class PlayerController : MonoBehaviour
                 {
                     rb.velocity = new Vector2(hurtForce, rb.velocity.y);
                 }
-
-
-
             }
         }
 
@@ -238,14 +240,21 @@ public class PlayerController : MonoBehaviour
             
         }
     }
-
-
-
     private void Jumping()
     {
         rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
         state = State.jumping;
     }
+    private void ChangeHealth(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        healthAmount.text = currentHealth.ToString();
+        if (currentHealth == 0)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    
 }
 
     
