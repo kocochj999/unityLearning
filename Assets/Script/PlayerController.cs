@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Resources;
+using TMPro;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
 
@@ -17,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool isRunning = false;
     private bool isWalking = false;
     private int maxHealth = 100;
-    private int currentHealth;
+    
 
     // State varibles a.k.a Finite State Machine
     private enum State { indle, walking, running, jumping, falling, hurt }
@@ -31,11 +33,15 @@ public class PlayerController : MonoBehaviour
     // Inspector Varibles
     [SerializeField] private LayerMask ground;
     [SerializeField] private float speed;
-    [SerializeField] private float jumpHeight = 7f;
-    [SerializeField] private int coin = 0;
-    [SerializeField] private Text coinQuantity;
+    [SerializeField] private float jumpHeight = 6f;
     [SerializeField] private float hurtForce = 4f;
-    [SerializeField] private Text healthAmount;
+    
+
+    [SerializeField] private TextMeshProUGUI coinQuantity;
+    [SerializeField] private int coin = 0;
+    private int currentHealth;
+    [SerializeField] private Text healthAmount; 
+
 
     // Start is called before the first frame update
     void Start()
@@ -79,6 +85,15 @@ public class PlayerController : MonoBehaviour
                 ChangeHealth(25);
             }
         }
+        if(collision.tag == "PowerupPotion")
+        {
+            Destroy(collision.gameObject);
+            jumpHeight = 12f;
+            GetComponent<SpriteRenderer>().color = Color.blue;
+            StartCoroutine(ResetPower());
+
+
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -106,6 +121,10 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     rb.velocity = new Vector2(hurtForce, rb.velocity.y);
+                }
+                if (currentHealth == 0)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
             }
         }
@@ -253,6 +272,12 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+    private IEnumerator ResetPower()
+    {
+        yield return new WaitForSeconds(7);
+        jumpHeight = 6f;
+        GetComponent<SpriteRenderer>().color = Color.white;
     }
     
 }

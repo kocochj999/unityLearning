@@ -10,7 +10,7 @@ public class Davis : Enemy
     private float speed;
     private bool facingRight = true;
 
-    private Rigidbody2D rb;
+    
 
 
 
@@ -19,14 +19,14 @@ public class Davis : Enemy
     protected override void Start()
     {
         base.Start();
-        rb = GetComponent<Rigidbody2D>();
+        
     }   
 
     // Update is called once per frame
     void Update()
     {
 
-        Debug.Log(anim.GetBool("isWalking"));
+        //Debug.Log(anim.GetBool("isWalking"));
         if (anim.GetBool("isWalking"))
         {
             if (Mathf.Abs(rb.velocity.x) < 0.1f)

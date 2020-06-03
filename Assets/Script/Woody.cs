@@ -12,7 +12,7 @@ public class Woody : Enemy
     private float intiOffsetVal = 0f;
     private float intiSizeVal = 0.6f;
 
-    private Rigidbody2D rb;
+  
     private BoxCollider2D bc;
 
     
@@ -20,7 +20,7 @@ public class Woody : Enemy
     protected override void Start()
     {
         base.Start();
-        rb = GetComponent<Rigidbody2D>();
+        
         bc = GetComponent<BoxCollider2D>();
     }
     private void Update()
